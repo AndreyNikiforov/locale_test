@@ -1,0 +1,17 @@
+# https://github.com/pyinstaller/pyinstaller/issues/4371#issuecomment-794604187
+# needs to be compiled on musl
+FROM python:3.12-alpine3.18 as build
+# https://github.com/six8/pyinstaller-alpine/blob/develop/python3.7.Dockerfile#L10C21-L10C58
+RUN apk add --update zlib-dev gcc libc-dev musl-dev
+RUN pip install pyinstaller==6.9.0
+WORKDIR /app
+COPY src/check.py .
+RUN pyinstaller --onefile check.py
+
+FROM alpine:3.18 as run
+ENV MUSL_LOCPATH="/usr/share/i18n/locales/musl"
+RUN apk add --update --no-cache musl-locales musl-locales-lang
+WORKDIR /app
+COPY --from=build /app/dist/check .
+RUN chmod +x check
+ENTRYPOINT [ "./check" ]
