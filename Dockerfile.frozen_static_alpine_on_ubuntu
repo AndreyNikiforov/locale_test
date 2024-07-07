@@ -1,0 +1,19 @@
+# https://github.com/pyinstaller/pyinstaller/issues/4371#issuecomment-794604187
+# needs to be compiled on musl
+FROM python:3.12-alpine3.18 as build
+# https://github.com/six8/pyinstaller-alpine/blob/develop/python3.7.Dockerfile#L10C21-L10C58
+RUN apk add --update zlib-dev gcc libc-dev musl-dev patchelf
+RUN pip3 install pyinstaller==6.9.0 scons==4.6.0
+RUN pip3 install --disable-pip-version-check https://files.pythonhosted.org/packages/69/a7/993fa7a40179d36b328a212cf061a43876055ee3568e478e76aa7793ceb5/staticx-0.14.1.tar.gz
+WORKDIR /app
+COPY src/check.py .
+RUN pyinstaller --onefile check.py
+RUN staticx --loglevel INFO dist/check dist/check_static
+# RUN ls -la dist
+
+FROM ubuntu:noble as run
+RUN apt-get update && apt-get install -y locales-all
+WORKDIR /app
+COPY --from=build /app/dist/check_static check
+RUN chmod +x check
+ENTRYPOINT [ "./check" ]
