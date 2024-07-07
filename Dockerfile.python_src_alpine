@@ -1,0 +1,7 @@
+# https://stackoverflow.com/questions/61761085/python-locale-not-working-on-alpine-linux
+FROM python:3.12-alpine3.18
+ENV MUSL_LOCPATH="/usr/share/i18n/locales/musl"
+RUN apk add --update --no-cache musl-locales musl-locales-lang
+WORKDIR /app
+COPY src/check.py .
+ENTRYPOINT [ "python3", "check.py" ]
