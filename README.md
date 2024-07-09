@@ -34,5 +34,5 @@ scripts/all.sh
 | frozen | Ok | PyInstaller to pack python with dylibs |
 | frozen_static | Ok | PyInstaller to pack python as static with staticx |
 | frozen_static_alpine | Ok (Errors on build?) | PyInstaller to pack python as static with staticx on Alpine |
-| frozen_static_alpine_on_ubuntu | Ok | PyInstaller to pack python as static with staticx on Alpine, but distribute/test on Ubuntu |
+| frozen_static_alpine_on_ubuntu | Ok | PyInstaller to pack python as static with staticx on Alpine, but distribute/test on Ubuntu (with tweaks) |
 | frozen_static_debian_on_alpine | Exception (locale.Error: unsupported locale setting) | PyInstaller to pack python as static with staticx on python (Debian), but distribute/test on Alpine |
